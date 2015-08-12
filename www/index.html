@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="components/loader.js"></script>
+    <script type="text/javascript" src="./ncmb-latest.min.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="components/loader.css">
+
+    <script>
+        // information of this app
+        var appkey = "YOUR_APPLICATIONKEY";
+        var clientkey = "YOUR_CLIENTKEY";
+        var appID = "YOUR_APPLICATIONID";
+        var commonURL = "https://mb.api.cloud.nifty.com/2013-09-01/applications/"+ appID +"/publicFiles/";
+
+        function omikuji (){
+            // Initialize and set the app to use NCMB in Monaca
+            NCMB.initialize(appkey, clientkey);
+            var Omikuji = NCMB.Object.extend("Omikuji");
+            var query = new NCMB.Query(Omikuji);
+
+            query.find({
+              success: function(results) {
+                  // Get a random image name of the picture from the class "randomFortune" in NCMB
+                  var image_name = results[Math.floor(Math.random()*results.length)].get("image");
+
+                  // Change the css styles and srcs according to the omiukji states
+                  document.getElementById("saisyo").style["display"] = "none";
+                  document.getElementById("kekka").src = commonURL +image_name;
+                  document.getElementById("kekka").style["display"] = "inline";
+                  document.getElementById("button").src = "./images/omikuji-btn-yarinaosu.png";
+              },
+              error: function(error) {
+                  alert(error.toString() + "error occured")
+              }
+            });
+        }
+    </script>
+    <style>
+        body {
+            background-image: url("images/omikuji-bg.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        #hako {
+            margin-top: 15%;
+            margin-left : 0;
+            margin-right : 0;
+        }
+
+        img {
+           width: 70%;
+        }
+
+        #bottombar {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="hako">
+        <img id="saisyo" src="images/omikuji-box.png" />
+        <img id="kekka" style="display : none;"/>
+    </div>
+    <div id="bottombar">
+        <img id="button" src="images/omikuji-btn-hajimeru.png" onclick="omikuji()">
+    </div>
+</body>
+</html>
